@@ -1,0 +1,7 @@
+Flask
+psycopg2-binary
+pandas
+scikit-learn
+yfinance
+plotly
+python-dotenv
