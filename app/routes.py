@@ -4,11 +4,7 @@ from app.utils import check_user_credentials
 import os
 
 
-
-
-
 main = Blueprint('main', __name__)
-
 
 
 @main.route('/login', methods=['GET', 'POST'])
