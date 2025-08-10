@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard (Admin){% endblock %}
+
+{% block content %}
+  <h1>Welcome to the Dashboard, {{ username }}!</h1>
+  <p>Role: {{ role }}</p>
+
+  <p>This is the admin dashboard (currently mirrors client).</p>
+
+  <p><a href="{{ url_for('main.logout') }}">Log out</a></p>
+{% endblock %}

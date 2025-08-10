@@ -1,6 +1,6 @@
-from flask import render_template, redirect, url_for, flash, Blueprint
+from flask import render_template, redirect, url_for, flash, Blueprint, session
 from app.forms import LoginForm
-from app.utils import check_user_credentials
+from app.utils import check_user_credentials, get_user_role
 import os
 
 
@@ -15,6 +15,9 @@ def login():
         username = form.username.data
         password = form.password.data
         if check_user_credentials(username=username, password=password):
+            role = get_user_role(username) or 'client'
+            session['username'] = username
+            session['role'] = role
             flash('Login successful!', 'success')
             return redirect(url_for('main.dashboard'))    
         else:
@@ -23,7 +26,23 @@ def login():
 
 @main.route('/dashboard')
 def dashboard():
-    return "<h1>Welcome to the Dashboard!</h1>"
+    if 'username' not in session:
+        flash('You need to log in first','warning')
+        return redirect(url_for('main.login'))
+    
+    username = session.get('username')
+    role = session.get('role','client')
+    
+    template = 'dashboard_admin.html' if role == 'admin' else 'dashboard_client.html'
+    
+    return render_template(template, username=username, role=role) 
+
+@main.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('main.login'))
+
 
 
 @main.route('/')
