@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, Blueprint, session
 from app.forms import LoginForm
-from app.utils import check_user_credentials, get_user_role
+from app.utils import check_user_credentials, get_user_role, login_required, role_required
 import os
 
 
@@ -25,16 +25,11 @@ def login():
     return render_template('login.html', form=form)
 
 @main.route('/dashboard')
+@login_required
 def dashboard():
-    if 'username' not in session:
-        flash('You need to log in first','warning')
-        return redirect(url_for('main.login'))
-    
     username = session.get('username')
-    role = session.get('role','client')
-    
+    role = session.get('role','client') 
     template = 'dashboard_admin.html' if role == 'admin' else 'dashboard_client.html'
-    
     return render_template(template, username=username, role=role) 
 
 @main.route('/logout')
@@ -50,3 +45,8 @@ def index():
     return redirect(url_for('main.login'))          
 
 
+@main.route('/admin-only')
+@login_required
+@role_required('admin')
+def admin_only_page():
+    return "<h1>Welcome Admin! This is a restricted page.</h1>"
