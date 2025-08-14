@@ -2,30 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}Oh My Quant{% endblock %}</title>
-  </head>
-  <body>
-    <! ---Vamos a crear una variable temporal  para mostrar los mensajes en la pagina--->
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    {% with msgs = get_flashed_messages(with_categories=true) %}
-      {% if msgs %}
-        <ul>
-          {% for category, message in msgs %}
-            <li><strong>{{ category|capitalize }}:</strong> {{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    
-    {% block content %}{% endblock %}
+    <title>{% block title %}Oh My Quant{% endblock %}</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    >
+
+        <!-- CSS Propio -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1
+
+    <!-- Google Fonts -->.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  </head>
+
+  <body class="bg-light">
+
+          <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">Oh My Quant</a>
+          
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+              {% if session.get('username') %}
+              <li class="nav-item">
+                <span class="navbar-text me-3">
+                  Logged in as <strong>{{ session['username'] }}</strong>
+                </span>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.logout') }}">Log out</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <main class="container py-4">
+        <!-- Flash messages con Bootstrap -->
+        {% with msgs = get_flashed_messages(with_categories=true) %}
+          {% if msgs %}
+            {% for category, message in msgs %}
+              <div class="alert alert-{{ 'warning' if category == 'message' else category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Zona que rellenan las plantillas hijas -->
+        {% block content %}{% endblock %}
+      </main>
+
+      <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+          let alerts = document.querySelectorAll('.alert');
+          alerts.forEach(function(alert) {
+            let bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+          });
+        }, 3000); // 3000 ms = 3 segundos
+      });
+    </script>
+
   </body>
 </html>

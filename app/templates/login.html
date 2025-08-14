@@ -1,17 +1,52 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-  </head>
-  <body>
-    <h1>Login</h1>
-    <form method="POST">
-      {{ form.hidden_tag() }}
-      {{ form.username.label }} {{ form.username(size=32) }} <br><br>
-      {{ form.password.label }} {{ form.password(size=32) }} <br><br>
-      {{ form.submit() }}
-    </form>
-  </body>
-</html>
 
+{% extends "base.html" %}
+
+{% block title %}Login · Oh My Quant{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h1 class="h4 mb-3 text-center">Sign in</h1>
+
+          <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              {{ form.username.label(class_="form-label") }}
+              {{ form.username(class_=("form-control is-invalid" if form.username.errors else "form-control"),
+                               placeholder="Enter username",
+                               autocomplete="username") }}
+              {% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.username.errors[0] }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.password.label(class_="form-label") }}
+              {{ form.password(class_=("form-control is-invalid" if form.password.errors else "form-control"),
+                               placeholder="Enter password",
+                               autocomplete="current-password") }}
+              {% if form.password.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.password.errors[0] }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="d-grid">
+              {{ form.submit(class_="btn btn-primary") }}
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <p class="text-center mt-3 small text-muted">
+        For testing: <code>admin / 123</code> or <code>guest / guestpass</code>
+      </p>
+    </div>
+  </div>
+{% endblock %}

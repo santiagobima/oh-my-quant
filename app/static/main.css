@@ -1,0 +1,59 @@
+/* GENERICO */
+body {
+  background: linear-gradient(to right, #004e92, #000428);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #f8f9fa; /* texto casi blanco */
+  margin: 0;
+  padding: 0;
+}
+
+/* ENCABECAZADOS */
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+/* BARRA DE NAVEGACION?*/
+.navbar {
+  background-color: rgba(0,0,0,0.7) !important;
+}
+
+.navbar-brand, .nav-link {
+  color: #f8f9fa !important;
+}
+
+.nav-link:hover {
+  color: #ffc107 !important; /* Amarillo Bootstrap */
+}
+
+/* TARJETAS */
+.card {
+  background-color: #ffffff;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+/* LOS BOTONES */
+.btn-primary {
+  background-color: #004e92;
+  border-color: #004e92;
+}
+
+.btn-primary:hover {
+  background-color: #003366;
+  border-color: #003366;
+}
+
+/* FORMULARIOS*/
+form label {
+  font-weight: bold;
+}
+
+input, select, textarea {
+  border-radius: 0.3rem !important;
+}
