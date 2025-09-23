@@ -12,6 +12,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 def safe_float(value):
     try:
         return float(value) if pd.notna(value) else None
+    
     except Exception:
         return None
 
@@ -24,9 +25,11 @@ def main():
 # Descargamos la tabla de S&P 500 desde Wikipedia.
  
 URL = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
 }
+
 
 response = requests.get(URL, headers=headers)
 tables = pd.read_html(response.text)
@@ -65,7 +68,7 @@ with psycopg2.connect(DATABASE_URL) as conn:
             
             try:
                 yf_symbol = symbol.replace('.', '-')
-                data = yf.download(yf_symbol, period='5d')
+                data = yf.download(yf_symbol, period='30d')
                 print("Columnas originales:", data.columns.tolist())
                 data.columns = [col[0] if isinstance(col, tuple) else col for col in data.columns]
                 print(f' Downloaded {len(data)} rows for {symbol}')
@@ -92,3 +95,5 @@ with psycopg2.connect(DATABASE_URL) as conn:
 if __name__ == '__main__':
     main()
     
+
+
