@@ -3,6 +3,16 @@
 {% block title %}Dashboard · Client · Oh My Quant{% endblock %}
 
 {% block content %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-3">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
   <h1 class="display-5 fw-bold mb-3">Welcome to the Dashboard, {{ username }}!</h1>
 
   <p class="lead mb-1">Role: <strong>{{ role }}</strong></p>
@@ -15,7 +25,13 @@
           <h2 class="h5 card-title mb-3">Quick actions</h2>
           <ul class="mb-0">
             <li>View portfolio KPIs (coming soon)</li>
-            <li>Fetch latest market data (coming soon)</li>
+            <li>
+              <form action="{{ url_for('main.fetch_latest') }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-primary">
+                  Fetch latest market data
+                </button>
+              </form>
+            </li>
             <li>Run simple ML model (coming soon)</li>
           </ul>
         </div>

@@ -1,7 +1,10 @@
-from flask import render_template, redirect, url_for, flash, Blueprint, session
+from flask import render_template, redirect, url_for, flash, Blueprint,jsonify, session
 from app.forms import LoginForm
 from app.utils import check_user_credentials, get_user_role, login_required, role_required
 import os
+import subprocess
+
+
 
 
 main = Blueprint('main', __name__)
@@ -50,3 +53,35 @@ def index():
 @role_required('admin')
 def admin_only_page():
     return "<h1>Welcome Admin! This is a restricted page.</h1>"
+
+
+
+@main.route('/fetch-latest', methods=['POST'])
+@login_required
+def fetch_latest():
+    try:
+        # Lanza el script en segundo plano (no bloquea)
+        subprocess.Popen(
+            ['python3', 'scripts/seed_market.py'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        flash('Market data fetching started...', 'info')
+    except Exception as e:
+        flash(f'Exception occurred: {str(e)}', 'danger')
+
+    # Redirige al spinner inmediatamente
+    return redirect(url_for('main.fetching'))
+
+
+@main.route('/fetching')
+@login_required
+def fetching():
+    return render_template("fetching.html")
+
+
+        
+    
+ 
+        
+        

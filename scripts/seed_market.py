@@ -68,7 +68,7 @@ with psycopg2.connect(DATABASE_URL) as conn:
             
             try:
                 yf_symbol = symbol.replace('.', '-')
-                data = yf.download(yf_symbol, period='30d')
+                data = yf.download(yf_symbol, period='1Y')
                 print("Columnas originales:", data.columns.tolist())
                 data.columns = [col[0] if isinstance(col, tuple) else col for col in data.columns]
                 print(f' Downloaded {len(data)} rows for {symbol}')
