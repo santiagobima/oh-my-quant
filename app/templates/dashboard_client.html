@@ -44,19 +44,22 @@
     </div>
 
     <!-- Right column: Market news -->
+    <!-- Right column: Market news -->
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h2 class="h5 card-title mb-3">Last Market News</h2>
+          <h2 class="h5 card-title mb-3">📰 Last Market News</h2>
 
           {% if articles %}
-            <ul class="mb-0">
+            <!-- Contenedor con scroll para que no crezca infinito -->
+            <div style="max-height: 300px; overflow-y: auto;" class="list-group">
               {% for article in articles %}
-                <li>
-                  <a href="{{ article.link }}" target="_blank">{{ article.title }}</a>
-                </li>
+                <a href="{{ article.link }}" target="_blank" 
+                  class="list-group-item list-group-item-action text-truncate">
+                  {{ article.title }}
+                </a>
               {% endfor %}
-            </ul>
+            </div>
 
             <p class="mt-2">
               <a href="{{ url_for('main.market_news') }}" class="btn btn-sm btn-outline-primary">
@@ -69,7 +72,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <p class="mt-4">
     <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light">Log out</a>

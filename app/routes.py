@@ -52,8 +52,7 @@ def dashboard():
     import feedparser
     feed_url= "https://finance.yahoo.com/news/rss"
     feed = feedparser.parse(feed_url)
-    articles = [{'title': e.title, 'link': e.link, 'published': e.published} for e in feed.entries[:5]]
-    
+    articles = [{'title': e.title, 'link': e.link, 'published': e.published} for e in feed.entries[:10]]
     
     
     
