@@ -3,6 +3,9 @@ from app.forms import LoginForm
 from app.utils import check_user_credentials, get_user_role, login_required, role_required
 import os
 import subprocess
+from datetime import datetime
+import psycopg2
+import pandas as pd 
 
 
 
@@ -33,7 +36,24 @@ def dashboard():
     username = session.get('username')
     role = session.get('role','client') 
     template = 'dashboard_admin.html' if role == 'admin' else 'dashboard_client.html'
-    return render_template(template, username=username, role=role) 
+    
+    last_update = None
+    try:
+        with psycopg2.connect(os.getenv('DATABASE_URL')) as conn:
+            with conn.cursor() as cur:
+                cur.execute('SELECT MAX(trade_date) FROM prices_eod;')
+                result = cur.fetchone()
+                if result and result[0]:
+     
+                    last_update = result[0].strftime('%Y-%m-%d')
+    except Exception as e:
+        print(f"Error fetching last update date: {e}")
+        last_update = 'Unknown'
+    
+    return render_template(template, username=username, role=role, last_update=last_update) 
+
+
+
 
 @main.route('/logout')
 def logout():
@@ -83,5 +103,4 @@ def fetching():
         
     
  
-        
         
