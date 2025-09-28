@@ -44,13 +44,22 @@ def dashboard():
                 cur.execute('SELECT MAX(trade_date) FROM prices_eod;')
                 result = cur.fetchone()
                 if result and result[0]:
-     
                     last_update = result[0].strftime('%Y-%m-%d')
     except Exception as e:
         print(f"Error fetching last update date: {e}")
         last_update = 'Unknown'
     
-    return render_template(template, username=username, role=role, last_update=last_update) 
+    import feedparser
+    feed_url= "https://finance.yahoo.com/news/rss"
+    feed = feedparser.parse(feed_url)
+    articles = [{'title': e.title, 'link': e.link, 'published': e.published} for e in feed.entries[:5]]
+    
+    
+    
+    
+    
+    
+    return render_template(template, username=username, role=role, last_update=last_update, articles=articles) 
 
 
 
@@ -98,6 +107,17 @@ def fetch_latest():
 @login_required
 def fetching():
     return render_template("fetching.html")
+
+
+@main.route('/market-news')
+@login_required
+def market_news():
+    import feedparser  
+    feed_url = "https://finance.yahoo.com/news/rss"
+    feed = feedparser.parse(feed_url)   
+    articles = [{'title': e.title, 'link': e.link, 'published': e.published} for e in feed.entries[:20]]
+    return render_template('market_news.html', articles=articles)
+    
 
 
         

@@ -13,12 +13,14 @@
       {% endfor %}
     {% endif %}
   {% endwith %}
+
   <h1 class="display-5 fw-bold mb-3">Welcome to the Dashboard, {{ username }}!</h1>
 
   <p class="lead mb-1">Role: <strong>{{ role }}</strong></p>
   <p class="mb-4">This is the client dashboard (currently mirrors admin).</p>
 
   <div class="row g-3">
+    <!-- Left column: Quick actions -->
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-body">
@@ -31,7 +33,9 @@
                   Fetch latest market data
                 </button>
               </form>
-              <small class='text-muted ms-2'> Last update: {{ last_update if last_update else "n/a" }} </small>
+              <small class="text-muted ms-2">
+                Last update: {{ last_update if last_update else "n/a" }}
+              </small>
             </li>
             <li>Run simple ML model (coming soon)</li>
           </ul>
@@ -39,11 +43,29 @@
       </div>
     </div>
 
+    <!-- Right column: Market news -->
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h2 class="h5 card-title mb-3">Recent activity</h2>
-          <p class="text-muted mb-0">No activity yet.</p>
+          <h2 class="h5 card-title mb-3">Last Market News</h2>
+
+          {% if articles %}
+            <ul class="mb-0">
+              {% for article in articles %}
+                <li>
+                  <a href="{{ article.link }}" target="_blank">{{ article.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+
+            <p class="mt-2">
+              <a href="{{ url_for('main.market_news') }}" class="btn btn-sm btn-outline-primary">
+                View all news
+              </a>
+            </p>
+          {% else %}
+            <p class="text-muted mb-0">No news available right now.</p>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -52,4 +74,5 @@
   <p class="mt-4">
     <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light">Log out</a>
   </p>
+
 {% endblock %}
