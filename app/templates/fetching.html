@@ -1,16 +1,20 @@
 {% extends "base.html" %}
-
 {% block title %}Fetching Data · Oh My Quant{% endblock %}
 
 {% block content %}
-  <div class="text-center mt-5">
+  <div class="text-center mt-5 text-light">
     <h2>⏳ Fetching latest market data...</h2>
-    <p>This may take a few seconds. You will be redirected automatically.</p>
+    <p>This may take a couple of minutes while data updates.</p>
     <div class="spinner-border text-primary mt-3" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
+    <p class="mt-3">
+      If you prefer, you can <a href="{{ url_for('main.dashboard') }}" class="text-info">go back to the dashboard</a>.
+    </p>
   </div>
 
-  <!-- Meta refresh: vuelve al dashboard en 2 segundos -->
-  <meta http-equiv="refresh" content="10;url={{ url_for('main.dashboard') }}">
+  {% if refresh_url %}
+    <!-- 🔁 Recarga la página cada 15 segundos -->
+    <meta http-equiv="refresh" content="45;url={{ refresh_url }}">
+  {% endif %}
 {% endblock %}

@@ -1,9 +1,9 @@
-from flask import render_template, redirect, url_for, flash, Blueprint,jsonify, session
+from flask import render_template, redirect, url_for, flash, Blueprint, jsonify, session, request
 from app.forms import LoginForm
 from app.utils import check_user_credentials, get_user_role, login_required, role_required
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, date
 import psycopg2
 import pandas as pd 
 
@@ -83,29 +83,28 @@ def admin_only_page():
     return "<h1>Welcome Admin! This is a restricted page.</h1>"
 
 
-
 @main.route('/fetch-latest', methods=['POST'])
 @login_required
 def fetch_latest():
+    import subprocess, time
     try:
-        # Lanza el script en segundo plano (no bloquea)
-        subprocess.Popen(
+        # Ejecuta el script y espera a que termine
+        result = subprocess.run(
             ['python3', 'scripts/seed_market.py'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
+            text=True,
         )
-        flash('Market data fetching started...', 'info')
+        if result.returncode == 0:
+            flash('✅ Market data updated successfully.', 'success')
+        else:
+            flash(f'⚠️ Error fetching data:\n{result.stderr}', 'danger')
     except Exception as e:
-        flash(f'Exception occurred: {str(e)}', 'danger')
+        flash(f'❌ Exception occurred: {str(e)}', 'danger')
 
-    # Redirige al spinner inmediatamente
-    return redirect(url_for('main.fetching'))
+    # Espera breve antes de volver
+    time.sleep(1)
+    return redirect(url_for('main.dashboard'))
 
-
-@main.route('/fetching')
-@login_required
-def fetching():
-    return render_template("fetching.html")
 
 
 @main.route('/market-news')
